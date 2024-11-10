@@ -30,6 +30,8 @@ import {
   CardDescription,
   CardContent, CardFooter,
 } from '@/components/ui/card'
+import { useMutation } from 'convex/react'
+import { api } from '../../../convex/_generated/api'
 
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' })
@@ -42,6 +44,8 @@ const formSchema = z.object({
 })
 
 export function Dashboard() {
+  const createNote = useMutation(api.notes.createNote)
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,10 +57,14 @@ export function Dashboard() {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    await createNote({
+      title: values.title,
+      description: values.description,
+      text: values.text,
+    })
   }
 
   return (
