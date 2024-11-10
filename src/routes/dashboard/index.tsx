@@ -30,7 +30,7 @@ import {
   CardDescription,
   CardContent, CardFooter,
 } from '@/components/ui/card'
-import { useMutation } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 
 const formSchema = z.object({
@@ -45,6 +45,7 @@ const formSchema = z.object({
 
 export function Dashboard() {
   const createNote = useMutation(api.notes.createNote)
+  const notes = useQuery(api.notes.getNotes)
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -134,21 +135,13 @@ export function Dashboard() {
         </SheetContent>
       </Sheet>
       <div className="grid grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <Card key={index}>
+        {notes?.map((note) => (
+          <Card key={note._id}>
             <CardHeader>
-              <CardTitle>Practice running</CardTitle>
-              <CardDescription>
-                I want to be healthy to live longer with a special person
-              </CardDescription>
+              <CardTitle>{note.title}</CardTitle>
+              <CardDescription>{note.description}</CardDescription>
             </CardHeader>
-            <CardContent>
-              <p>
-                Running improves cardiovascular health, strengthens muscles,
-                helps with weight control and relieves stress, promoting
-                well-being and quality of life.
-              </p>
-            </CardContent>
+            <CardContent>{note.text}</CardContent>
             <CardFooter>
               <Button variant="destructive">
                 <Trash2 />
