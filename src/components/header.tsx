@@ -4,6 +4,9 @@ import { NavLink } from './nav-link'
 import { ThemeSwitcher } from './theme-switcher'
 import { Input } from './ui/input'
 
+import { SignInButton, UserButton } from '@clerk/clerk-react'
+import { Authenticated, Unauthenticated } from 'convex/react'
+
 export function Header() {
   return (
     <div className="border-b">
@@ -23,7 +26,12 @@ export function Header() {
           <Separator orientation="vertical" className="h-6" />
 
           <ThemeSwitcher />
-          {/* Account Menu */}
+          <Unauthenticated>
+            <SignInButton />
+          </Unauthenticated>
+          <Authenticated>
+            <UserButton />
+          </Authenticated>
         </div>
       </div>
     </div>

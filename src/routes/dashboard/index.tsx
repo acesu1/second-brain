@@ -62,7 +62,7 @@ export function Dashboard() {
   return (
     <div className="space-y-16">
       <Sheet>
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <Button>
             <PlusCircle />
             New Note
