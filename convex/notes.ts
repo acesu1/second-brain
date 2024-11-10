@@ -1,7 +1,6 @@
 import { mutation, query } from './_generated/server'
 import { ConvexError, v } from 'convex/values'
 
-// Create note
 export const createNote = mutation({
   args: {
     title: v.string(),
@@ -25,7 +24,6 @@ export const createNote = mutation({
   },
 })
 
-// Get notes
 export const getNotes = query({
   async handler(ctx) {
     const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier
@@ -38,5 +36,27 @@ export const getNotes = query({
       .query('notes')
       .withIndex('by_token_identifier', (q) => q.eq('tokenIdentifier', userId))
       .collect()
+  },
+})
+
+export const deleteNote = mutation({
+  args: {
+    noteId: v.id('notes'),
+  },
+
+  async handler(ctx, args) {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier
+
+    if (!userId) {
+      throw new ConvexError('You must be logged in to create a note')
+    }
+
+    const note = await ctx.db.get(args.noteId)
+
+    if (!note) {
+      throw new ConvexError('Note not found')
+    }
+
+    await ctx.db.delete(args.noteId)
   },
 })

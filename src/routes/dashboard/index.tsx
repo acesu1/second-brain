@@ -46,8 +46,8 @@ const formSchema = z.object({
 export function Dashboard() {
   const createNote = useMutation(api.notes.createNote)
   const notes = useQuery(api.notes.getNotes)
+  const deleteNote = useMutation(api.notes.deleteNote)
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,10 +57,7 @@ export function Dashboard() {
     },
   })
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     await createNote({
       title: values.title,
       description: values.description,
@@ -143,7 +140,11 @@ export function Dashboard() {
             </CardHeader>
             <CardContent>{note.text}</CardContent>
             <CardFooter>
-              <Button variant="destructive">
+              <Button
+                variant="destructive" onClick={() => {
+                  deleteNote({ noteId: note._id })
+                }}
+              >
                 <Trash2 />
                 Delete
               </Button>
