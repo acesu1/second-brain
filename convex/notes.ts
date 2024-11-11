@@ -60,3 +60,23 @@ export const deleteNote = mutation({
     await ctx.db.delete(args.noteId)
   },
 })
+
+export const updateNote = mutation({
+  args: {
+    noteId: v.id('notes'),
+    text: v.string(),
+    title: v.string(),
+    description: v.string(),
+  },
+
+  async handler(ctx, args) {
+    const { noteId } = args
+
+    await ctx.db.patch(noteId,
+      {
+        text: args.text,
+        title: args.title,
+        description: args.description,
+      })
+  },
+})

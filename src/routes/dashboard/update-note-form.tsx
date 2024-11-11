@@ -5,7 +5,6 @@ import { z } from 'zod'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import type { Doc } from 'convex/_generated/dataModel'
 import { useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 
@@ -26,8 +26,14 @@ const formSchema = z.object({
     .max(1000),
 })
 
-export function CreateNoteForm({ onCreate }:{ onCreate: () => void }) {
-  const createNote = useMutation(api.notes.createNote)
+export function UpdateNoteForm({
+  note,
+  onEdit,
+}: {
+  note: Doc<'notes'>,
+  onEdit: () => void,
+}) {
+  const updateNote = useMutation(api.notes.updateNote)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,12 +45,14 @@ export function CreateNoteForm({ onCreate }:{ onCreate: () => void }) {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createNote({
+    await updateNote({
+      noteId: note._id,
       title: values.title,
       description: values.description,
       text: values.text,
     })
-    onCreate()
+
+    onEdit()
   }
 
   return (
@@ -72,10 +80,6 @@ export function CreateNoteForm({ onCreate }:{ onCreate: () => void }) {
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>
-              <FormDescription>
-                The description serves to remind you why you created the
-                note.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
