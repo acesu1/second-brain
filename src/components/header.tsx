@@ -2,10 +2,10 @@ import { Brain } from 'lucide-react'
 import { Separator } from './ui/separator'
 import { NavLink } from './nav-link'
 import { ThemeSwitcher } from './theme-switcher'
-import { Input } from './ui/input'
 
 import { SignInButton, UserButton } from '@clerk/clerk-react'
 import { Authenticated, Unauthenticated } from 'convex/react'
+// import { SearchNoteInput } from './header/search-note-input'
 
 export function Header() {
   return (
@@ -21,9 +21,9 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center space-x-4">
-          <Input className="w-auto" placeholder="Search notes..." />
+          {/* <SearchNoteInput />
 
-          <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-6" /> */}
 
           <ThemeSwitcher />
           <Unauthenticated>

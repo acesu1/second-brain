@@ -80,3 +80,23 @@ export const updateNote = mutation({
       })
   },
 })
+
+export const searchNotes = query({
+  args: {
+    filter: v.optional(v.string()),
+  },
+  handler: async ({ db }, { filter }) => {
+    if (!filter) {
+      return await db.query('notes').collect()
+    }
+
+    return await db
+      .query('notes')
+      .filter((q) =>
+        q.gte(
+          q.field('title'), (filter),
+        ),
+      )
+      .collect()
+  },
+})
