@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -15,6 +14,8 @@ import { Textarea } from '@/components/ui/textarea'
 import type { Doc } from 'convex/_generated/dataModel'
 import { useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
+import { LoadingButton } from '@/components/loading-button'
+import { useState } from 'react'
 
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' })
@@ -33,6 +34,7 @@ export function UpdateNoteForm({
   note: Doc<'notes'>,
   onEdit: () => void,
 }) {
+  const [isLoading, setIsLoading] = useState(false)
   const updateNote = useMutation(api.notes.updateNote)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,6 +47,7 @@ export function UpdateNoteForm({
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
     await updateNote({
       noteId: note._id,
       title: values.title,
@@ -97,7 +100,13 @@ export function UpdateNoteForm({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <LoadingButton
+          isLoading={isLoading}
+          loadingText="Updating..."
+
+        >
+          Update
+        </LoadingButton>
       </form>
     </Form>
   )

@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -15,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
+import { LoadingButton } from '@/components/loading-button'
 
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' })
@@ -93,7 +93,12 @@ export function CreateNoteForm({ onCreate }:{ onCreate: () => void }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <LoadingButton
+          isLoading={form.formState.isSubmitting}
+          loadingText="Creating..."
+        >
+          Create
+        </LoadingButton>
       </form>
     </Form>
   )
