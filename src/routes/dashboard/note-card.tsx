@@ -7,25 +7,14 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
-import { Pencil, Trash2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import type { Doc } from 'convex/_generated/dataModel'
 import { useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
-
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { UpdateNoteForm } from './update-note-form'
 import { LoadingButton } from '@/components/loading-button'
+import { UpdateNoteButton } from './update-note-button'
+import { Trash2 } from 'lucide-react'
 
 export function NoteCard({ note }: { note: Doc<'notes'> }) {
-  const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const deleteNote = useMutation(api.notes.deleteNote)
 
@@ -37,24 +26,7 @@ export function NoteCard({ note }: { note: Doc<'notes'> }) {
       </CardHeader>
       <CardContent>{note.text}</CardContent>
       <CardFooter className="flex gap-2">
-        <Sheet onOpenChange={setIsOpen} open={isOpen}>
-          <SheetTrigger asChild>
-            <Button>
-              <Pencil />
-              Edit
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="space-y-4">
-            <SheetHeader>
-              <SheetTitle>Edit</SheetTitle>
-              <SheetDescription>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Beatae a distinctio ullam.
-              </SheetDescription>
-            </SheetHeader>
-            <UpdateNoteForm onEdit={() => setIsOpen(false)} note={note} />
-          </SheetContent>
-        </Sheet>
+        <UpdateNoteButton note={note} />
         <LoadingButton
           isLoading={isLoading}
           loadingText="Deleting..."
