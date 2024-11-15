@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { PlusCircle } from 'lucide-react'
 import { CreateNoteForm } from './create-note-form'
+import { PlusCircle } from 'lucide-react'
 import {
   Sheet,
   SheetTrigger,
@@ -10,9 +10,12 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet'
+import { useToast } from '@/hooks/use-toast'
+import { Toaster } from '@/components/ui/toaster'
 
 export function CreateNoteButton() {
   const [isOpen, setIsOpen] = useState(false)
+  const { toast } = useToast()
 
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
@@ -29,8 +32,15 @@ export function CreateNoteButton() {
             Add details to your note so you can easily find it later.
           </SheetDescription>
         </SheetHeader>
-        <CreateNoteForm onCreate={() => setIsOpen(false)} />
+        <CreateNoteForm onCreate={() => {
+          setIsOpen(false)
+          toast({
+            description: 'Note created successfully!',
+          })
+        }}
+        />
       </SheetContent>
+      <Toaster />
     </Sheet>
   )
 }
